@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      id="metaDescription"
+      name="description"
+      content="从小组排名开始，手动完成 2026 世界杯完整对阵预测。"
+    />
+    <title>GoalMap · 2026 世界杯预测模拟器</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <header class="site-header">
+      <a class="brand" href="#" aria-label="GoalMap 首页" data-i18n-aria="brandHome">
+        <span class="brand-mark"><span></span><span></span><span></span></span>
+        <span>GOAL<span>MAP</span></span>
+      </a>
+      <nav class="main-nav" aria-label="预测步骤" data-i18n-aria="predictionSteps">
+        <button class="nav-link active" data-scroll="groups" data-i18n="navGroups">小组排名</button>
+        <button class="nav-link" data-scroll="thirds" data-i18n="navThirds">最佳第三</button>
+        <button class="nav-link" data-scroll="knockout" data-i18n="navKnockout">淘汰赛</button>
+      </nav>
+      <div class="header-actions">
+        <span class="live-data-badge online" id="dataStatus"><i></i> <span data-i18n="dataSnapshot">手动数据快照</span></span>
+        <button class="language-toggle" id="languageToggle" type="button" aria-label="Switch to English">EN</button>
+        <button class="header-reset" id="resetAllBtn" data-i18n="restart">重新开始</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow"><span>◆</span> 2026 WORLD CUP BRACKET</div>
+        <div class="hero-grid">
+          <div>
+            <h1><em data-i18n="heroTitle">世界杯预测模拟器</em></h1>
+            <p data-i18n="heroDescription">
+              拖动每组球队决定排名，再排出 8 个最佳小组第三。
+              32 强签表会自动生成，之后每一场都由你亲手选择。
+            </p>
+          </div>
+          <div class="hero-side">
+            <div class="hero-count">
+              <span id="heroProgress">0%</span>
+              <small data-i18n="completion">预测完成度</small>
+            </div>
+            <button class="primary-button" data-scroll="groups">
+              <span data-i18n="startPrediction">开始我的预测</span> <span>↓</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="format-strip">
+          <div><strong>48</strong><span data-i18n="teamsCount">支球队</span></div>
+          <i></i>
+          <div><strong>12</strong><span data-i18n="groupsCount">个小组</span></div>
+          <i></i>
+          <div><strong>8</strong><span data-i18n="thirdsCount">个最佳第三</span></div>
+          <i></i>
+          <div><strong>32</strong><span data-i18n="knockoutCount">强淘汰赛</span></div>
+          <i></i>
+          <div class="champion-summary">
+            <span class="crown">♛</span>
+            <span id="headerChampion" data-i18n="waitingChampion">等待你的冠军</span>
+          </div>
+        </div>
+        <div class="data-source-line">
+          <span><span data-i18n="updatedAt">当前积分数据更新于</span> <b id="dataUpdatedAt">2026-06-25 17:22</b></span>
+          <a href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/standings" target="_blank" rel="noreferrer" data-i18n="officialStandings">查看 FIFA 官方积分榜 ↗</a>
+        </div>
+      </section>
+
+      <section class="workflow-nav" aria-label="预测进度" data-i18n-aria="predictionProgress">
+        <button class="workflow-step active" data-scroll="groups">
+          <span>01</span>
+          <div><b data-i18n="stepGroups">排列小组</b><small data-i18n="stepGroupsHint">拖拽 12 组排名</small></div>
+          <em id="groupStepStatus" data-i18n="adjustAnytime">可随时调整</em>
+        </button>
+        <button class="workflow-step" data-scroll="thirds">
+          <span>02</span>
+          <div><b data-i18n="stepThirds">最佳第三</b><small data-i18n="stepThirdsHint">前 8 名自动晋级</small></div>
+          <em id="thirdStepStatus">8 / 12</em>
+        </button>
+        <button class="workflow-step" data-scroll="knockout">
+          <span>03</span>
+          <div><b data-i18n="stepChampion">选择冠军</b><small data-i18n="stepChampionHint">逐场点击晋级</small></div>
+          <em id="knockoutStepStatus">0 / 31</em>
+        </button>
+      </section>
+
+      <section class="section-block" id="groups">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">STEP 01 · GROUP STAGE</span>
+            <h2 data-i18n="groupsTitle">从当前真实积分榜继续预测</h2>
+            <p data-i18n="groupsDescription">积分、净胜球和已赛场次为真实数据；拖动球队，预测最终排名。</p>
+          </div>
+          <div class="heading-actions">
+            <span class="autosave"><i></i> <span data-i18n="autosave">自动保存</span></span>
+            <button class="outline-button" id="resetGroupsBtn" data-i18n="restoreStandings">恢复真实排名</button>
+          </div>
+        </div>
+        <div class="group-legend">
+          <span><i class="status-dot direct"></i><span data-i18n="legendDirect">直接晋级</span></span>
+          <span><i class="status-dot third"></i><span data-i18n="legendThird">进入最佳第三比较</span></span>
+          <span><i class="status-dot out"></i><span data-i18n="legendOut">暂时出局</span></span>
+        </div>
+        <div class="groups-grid" id="groupsGrid"></div>
+      </section>
+
+      <section class="section-block thirds-section" id="thirds">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">STEP 02 · BEST THIRD-PLACED</span>
+            <h2 data-i18n="thirdsTitle">再排一次：谁是最好的第三名？</h2>
+            <p data-i18n="thirdsDescription">拖动 12 支小组第三名球队，排在绿色晋级线以上的 8 队进入 32 强。</p>
+          </div>
+          <div class="third-counter">
+            <strong>8</strong><span data-i18n="thirdsCounter">/ 12 晋级</span>
+          </div>
+        </div>
+        <div class="third-ranking-shell">
+          <div class="third-ranking-head">
+            <span data-i18n="rank">排名</span><span data-i18n="teamLabel">球队</span><span data-i18n="source">来源</span><span data-i18n="status">状态</span>
+          </div>
+          <div class="third-ranking" id="thirdRanking"></div>
+          <div class="qualification-line">
+            <span data-i18n="qualificationLine">晋级线</span>
+            <small data-i18n="qualificationHint">上方 8 队晋级 · 下方 4 队出局</small>
+          </div>
+        </div>
+        <div class="third-note">
+          <span>i</span>
+          <p data-i18n="thirdsNote">
+            默认顺序依据当前积分、净胜球和进球数排列；你仍可拖动调整自己的预测。
+            小组赛尚未全部结束时，“暂列晋级区”不代表已经确认晋级；第三名进入
+            32 强后的落位会按当前晋级组合映射。
+          </p>
+        </div>
+      </section>
+
+      <section class="section-block knockout-section" id="knockout">
+        <div class="section-heading bracket-heading">
+          <div>
+            <span class="section-kicker">STEP 03 · ROAD TO THE FINAL</span>
+            <h2 data-i18n="bracketTitle">完整冠军路径</h2>
+            <p data-i18n="bracketDescription">从 32 强开始点击你看好的球队，它会自动出现在下一轮。</p>
+          </div>
+          <div class="bracket-actions">
+            <div class="prediction-progress">
+              <span><b id="selectedMatches">0</b> <span data-i18n="matchesSelected">/ 31 场已选择</span></span>
+              <div><i id="predictionProgressBar"></i></div>
+            </div>
+            <button class="outline-button" id="clearBracketBtn" data-i18n="clearBracket">清空淘汰赛</button>
+          </div>
+        </div>
+
+        <div class="bracket-shell">
+          <div class="bracket-topbar">
+            <div>
+              <span class="pulse-dot"></span>
+              <span data-i18n="clickToAdvance">点击球队即可晋级</span>
+            </div>
+            <div class="bracket-legend">
+              <span><i class="picked-swatch"></i><span data-i18n="selected">已选择</span></span>
+              <span><i class="waiting-swatch"></i><span data-i18n="waitingPrevious">等待上轮结果</span></span>
+            </div>
+          </div>
+          <div class="bracket-scroll">
+            <div class="bracket-board" id="bracketBoard">
+              <section class="round-column">
+                <div class="round-title"><span>ROUND OF 32</span><b data-i18n="round32">32 强</b></div>
+                <div class="round-matches round-32" id="round32"></div>
+              </section>
+              <section class="round-column">
+                <div class="round-title"><span>ROUND OF 16</span><b data-i18n="round16">16 强</b></div>
+                <div class="round-matches round-16" id="round16"></div>
+              </section>
+              <section class="round-column">
+                <div class="round-title"><span>QUARTER-FINALS</span><b data-i18n="quarterFinals">1/4 决赛</b></div>
+                <div class="round-matches quarter-finals" id="quarterFinals"></div>
+              </section>
+              <section class="round-column">
+                <div class="round-title"><span>SEMI-FINALS</span><b data-i18n="semiFinals">半决赛</b></div>
+                <div class="round-matches semi-finals" id="semiFinals"></div>
+              </section>
+              <section class="round-column final-column">
+                <div class="round-title"><span>FINAL</span><b data-i18n="final">决赛</b></div>
+                <div class="round-matches final-round" id="finalRound"></div>
+                <div class="champion-card empty" id="championCard">
+                  <span class="trophy">♛</span>
+                  <small data-i18n="yourChampion">你的预测冠军</small>
+                  <div id="championTeam">等待决赛结果</div>
+                  <p id="championPath">完成 31 场选择，见证冠军诞生</p>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="summary-section">
+        <div>
+          <span class="section-kicker">YOUR BRACKET</span>
+          <h2 data-i18n="summaryTitle">一套逻辑，看到底。</h2>
+        </div>
+        <div class="summary-cards">
+          <article>
+            <span>01</span>
+            <h3 data-i18n="summaryOneTitle">小组排名随手拖</h3>
+            <p data-i18n="summaryOneText">不录比分，不填复杂表格，直接表达你心里的最终排名。</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3 data-i18n="summaryTwoTitle">晋级关系自动串联</h3>
+            <p data-i18n="summaryTwoText">小组排名变化后，32 强入口和后续路径会同步更新。</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3 data-i18n="summaryThreeTitle">所有选择本地保存</h3>
+            <p data-i18n="summaryThreeText">关掉页面也不怕，回来可以继续完成你的冠军故事。</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <footer>
+      <a class="brand footer-brand" href="#">
+        <span class="brand-mark"><span></span><span></span><span></span></span>
+        <span>GOAL<span>MAP</span></span>
+      </a>
+      <p data-i18n="footerDisclaimer">积分数据来自公开赛事数据源，并以 FIFA 官方页面交叉核对 · 非 FIFA 官方产品</p>
+      <span>MAKE YOUR CALL</span>
+    </footer>
+
+    <script src="./real-data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
