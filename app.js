@@ -27,7 +27,10 @@ const TRANSLATIONS = {
     navGroups: "小组排名",
     navThirds: "最佳第三",
     navKnockout: "淘汰赛",
-    dataSnapshot: "手动数据快照",
+    dataSnapshot: "本地数据快照",
+    liveData: "ESPN 动态数据",
+    snapshotDataTitle: "当前页面使用本地快照数据",
+    liveDataTitle: "当前页面通过 Python 后端读取 ESPN 数据",
     restart: "重新开始",
     heroTitle: "世界杯预测模拟器",
     heroDescription: "拖动每组球队决定排名，再排出 8 个最佳小组第三。32 强签表会自动生成，之后每一场都由你亲手选择。",
@@ -121,7 +124,10 @@ const TRANSLATIONS = {
     navGroups: "Group standings",
     navThirds: "Best third-placed",
     navKnockout: "Knockout stage",
-    dataSnapshot: "Manual data snapshot",
+    dataSnapshot: "Local data snapshot",
+    liveData: "ESPN live data",
+    snapshotDataTitle: "This page is using the bundled local snapshot",
+    liveDataTitle: "This page is using ESPN data through the Python backend",
     restart: "Start over",
     heroTitle: "World Cup Predictor",
     heroDescription: "Drag teams to predict each group, then rank the 12 third-placed teams. The round of 32 and the complete path to the final update automatically.",
@@ -307,6 +313,7 @@ function applyStaticTranslations() {
     "aria-label",
     currentLanguage === "zh" ? "Switch to English" : "切换到中文",
   );
+  updateDataStatus();
 }
 
 function setLanguage(language) {
@@ -367,6 +374,20 @@ function seedTeam(seed) {
 
 function selectedThirdGroups() {
   return state.thirdOrder.slice(0, 8);
+}
+
+function isLiveData() {
+  return REAL_DATA.mode === "live";
+}
+
+function updateDataStatus() {
+  const status = el("dataStatus");
+  const label = status.querySelector("[data-data-status-label]");
+  const live = isLiveData();
+  status.classList.toggle("online", live);
+  status.classList.toggle("fallback", !live);
+  label.textContent = t(live ? "liveData" : "dataSnapshot");
+  status.title = t(live ? "liveDataTitle" : "snapshotDataTitle");
 }
 
 function allocateThirdSlots() {
@@ -534,6 +555,7 @@ function matchTeamMarkup(currentTeam, match, slot) {
       class="bracket-team ${match.winnerId === currentTeam.id ? "picked" : ""}"
       data-match="${match.no}"
       data-pick="${currentTeam.id}"
+      aria-pressed="${match.winnerId === currentTeam.id}"
       aria-label="${t("chooseAdvance", { team: currentTeam.name })}"
     >
       ${flagMarkup(currentTeam.id)}
@@ -748,9 +770,15 @@ function formatGoalDifference(value) {
 function updateProgress() {
   const picked = Object.keys(state.selections).filter((no) => bracket[no]?.winnerId).length;
   const percent = Math.round((picked / 31) * 100);
+  const progressBar = el("predictionProgressBar");
   el("selectedMatches").textContent = picked;
   el("knockoutStepStatus").textContent = `${picked} / 31`;
-  el("predictionProgressBar").style.width = `${percent}%`;
+  progressBar.style.width = `${percent}%`;
+  progressBar.setAttribute("role", "progressbar");
+  progressBar.setAttribute("aria-label", t("completion"));
+  progressBar.setAttribute("aria-valuemin", "0");
+  progressBar.setAttribute("aria-valuemax", "100");
+  progressBar.setAttribute("aria-valuenow", String(percent));
   el("heroProgress").textContent = `${percent}%`;
 
   document.querySelectorAll(".workflow-step").forEach((step, index) => {
@@ -809,6 +837,7 @@ function renderAll() {
 function formatUpdatedAt(dateValue) {
   return new Intl.DateTimeFormat(currentLanguage === "en" ? "en-GB" : "zh-CN", {
     timeZone: "Asia/Shanghai",
+    year: "numeric",
     month: "2-digit",
     day: "2-digit",
     hour: "2-digit",
@@ -817,9 +846,34 @@ function formatUpdatedAt(dateValue) {
   }).format(new Date(dateValue));
 }
 
+function setActiveNavTarget(targetId) {
+  document.querySelectorAll(".main-nav .nav-link").forEach((button) => {
+    button.classList.toggle("active", button.dataset.scroll === targetId);
+  });
+}
+
+function initScrollNavigation() {
+  const sectionIds = ["groups", "thirds", "knockout"];
+  if (!("IntersectionObserver" in window)) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter((entry) => entry.isIntersecting)
+      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    if (visible?.target?.id) setActiveNavTarget(visible.target.id);
+  }, {
+    rootMargin: "-32% 0px -52% 0px",
+    threshold: [0.1, 0.35, 0.6],
+  });
+
+  sectionIds.forEach((id) => observer.observe(el(id)));
+}
+
 document.querySelectorAll("[data-scroll]").forEach((button) => {
   button.addEventListener("click", () => {
-    el(button.dataset.scroll).scrollIntoView({ behavior: "smooth", block: "start" });
+    const targetId = button.dataset.scroll;
+    setActiveNavTarget(targetId);
+    el(targetId).scrollIntoView({ behavior: "smooth", block: "start" });
   });
 });
 
@@ -833,3 +887,4 @@ el("languageToggle").addEventListener("click", () => {
 applyStaticTranslations();
 renderAll();
 el("dataUpdatedAt").textContent = formatUpdatedAt(snapshotUpdatedAt);
+initScrollNavigation();
