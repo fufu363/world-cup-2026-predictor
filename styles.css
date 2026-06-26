@@ -69,7 +69,7 @@ footer {
   font-family: "Manrope", sans-serif;
   font-size: 21px;
   font-weight: 800;
-  letter-spacing: -0.04em;
+  letter-spacing: 0;
 }
 .brand > span:last-child > span { color: var(--green); }
 .brand-mark {
@@ -98,6 +98,7 @@ footer {
   color: #74827c;
   font-size: 14px;
   cursor: pointer;
+  transition: color 160ms ease;
 }
 .nav-link:hover, .nav-link.active { color: var(--ink); }
 .nav-link.active::after {
@@ -149,13 +150,13 @@ footer {
   border-radius: 50%;
   background: #a9b1ad;
 }
-.live-data-badge.online { color: var(--green); }
+.live-data-badge.online { color: var(--green); background: rgba(232, 248, 237, 0.72); }
 .live-data-badge.online i {
   background: var(--green);
   box-shadow: 0 0 0 4px rgba(8,117,83,.1);
 }
 .live-data-badge.loading i { background: #d6a723; animation: dataPulse 1s ease-in-out infinite; }
-.live-data-badge.fallback { color: #9b7127; }
+.live-data-badge.fallback { color: #9b7127; background: rgba(255, 247, 222, 0.68); }
 .live-data-badge.fallback i { background: #d6a723; }
 @keyframes dataPulse { 50% { opacity: .35; } }
 
@@ -180,7 +181,7 @@ footer {
   margin: 0;
   font-size: clamp(48px, 6.1vw, 88px);
   line-height: 1.03;
-  letter-spacing: -0.065em;
+  letter-spacing: 0;
 }
 .hero h1 em { position: relative; color: var(--green); font-style: normal; }
 .hero h1 em::after {
@@ -211,10 +212,9 @@ footer {
   font-family: "Manrope", sans-serif;
   font-size: 35px;
   font-weight: 800;
-  letter-spacing: -0.05em;
+  letter-spacing: 0;
 }
-.hero-count small { color: var(--muted); font-size: 10px; }
-.hero-count small { font-size: 12px; }
+.hero-count small { color: var(--muted); font-size: 12px; }
 .primary-button {
   min-height: 52px;
   border: 0;
@@ -246,10 +246,9 @@ footer {
 .format-strip strong {
   font-family: "Manrope", sans-serif;
   font-size: 25px;
-  letter-spacing: -0.04em;
+  letter-spacing: 0;
 }
-.format-strip span { color: var(--muted); font-size: 10px; }
-.format-strip span { font-size: 12px; }
+.format-strip span { color: var(--muted); font-size: 12px; }
 .format-strip > i { width: 1px; height: 30px; background: var(--line); }
 .format-strip .champion-summary {
   min-width: 190px;
@@ -313,7 +312,6 @@ footer {
   font-weight: 800;
 }
 .workflow-step div { display: flex; flex-direction: column; gap: 3px; }
-.workflow-step b { font-size: 11px; }
 .workflow-step b { font-size: 14px; }
 .workflow-step small, .workflow-step em { color: #89958f; font-size: 11px; font-style: normal; }
 .workflow-step em {
@@ -336,7 +334,7 @@ footer {
   margin: 8px 0 0;
   font-size: 36px;
   line-height: 1.2;
-  letter-spacing: -0.045em;
+  letter-spacing: 0;
 }
 .section-heading p {
   margin: 10px 0 0;
@@ -503,10 +501,9 @@ footer {
   color: var(--green);
   font-family: "Manrope", sans-serif;
   font-size: 38px;
-  letter-spacing: -.05em;
+  letter-spacing: 0;
 }
-.third-counter span { color: var(--muted); font-size: 10px; }
-.third-counter span { font-size: 12px; }
+.third-counter span { color: var(--muted); font-size: 12px; }
 .third-ranking-shell {
   position: relative;
   max-width: 960px;
@@ -618,8 +615,7 @@ footer {
 .bracket-heading { align-items: center; }
 .bracket-actions { display: flex; align-items: center; gap: 18px; }
 .prediction-progress { min-width: 180px; }
-.prediction-progress > span { display: block; margin-bottom: 7px; color: var(--muted); font-size: 9px; }
-.prediction-progress > span { font-size: 11px; }
+.prediction-progress > span { display: block; margin-bottom: 7px; color: var(--muted); font-size: 11px; }
 .prediction-progress b { color: var(--green); font-family: "Manrope", sans-serif; font-size: 14px; }
 .prediction-progress > div { height: 5px; overflow: hidden; border-radius: 99px; background: #dfe3dc; }
 .prediction-progress i { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--green); transition: width .25s ease; }
@@ -651,7 +647,12 @@ footer {
 .bracket-legend span { display: flex; align-items: center; gap: 6px; }
 .picked-swatch, .waiting-swatch { width: 16px; height: 5px; border-radius: 99px; background: var(--green); }
 .waiting-swatch { background: #dfe3dc; }
-.bracket-scroll { overflow: auto; }
+.bracket-scroll {
+  overflow: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-color: rgba(8, 117, 83, 0.55) rgba(223, 227, 220, 0.85);
+  scrollbar-width: thin;
+}
 .bracket-board {
   min-width: 1540px;
   display: grid;
@@ -754,8 +755,7 @@ footer {
 }
 .champion-card.empty { opacity: .72; }
 .trophy { color: var(--lime); font-size: 27px; }
-.champion-card small { color: rgba(255,255,255,.48); font-size: 8px; letter-spacing: .1em; }
-.champion-card small { font-size: 10px; }
+.champion-card small { color: rgba(255,255,255,.48); font-size: 10px; letter-spacing: .1em; }
 #championTeam { display: flex; align-items: center; gap: 9px; font-size: 21px; font-weight: 800; }
 #championTeam .champion-flag { color: var(--ink); background: var(--lime); border-color: transparent; }
 .champion-card p { margin: 0; color: rgba(255,255,255,.48); font-size: 10px; }

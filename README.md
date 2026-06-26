@@ -19,7 +19,7 @@ A zero-dependency, bilingual World Cup bracket predictor. Rank every group by dr
 
 The included standings snapshot was updated on **June 25, 2026 at 17:22 (UTC+8)**.
 
-The app intentionally uses a bundled snapshot instead of a live API. Update [`real-data.js`](./real-data.js) when new results are available.
+When opened as a static page, the app uses the bundled snapshot in [`real-data.js`](./real-data.js). For dynamic data, run the Python backend; it reads ESPN's public standings JSON and converts it into the frontend data shape.
 
 ## Run locally
 
@@ -32,6 +32,21 @@ python -m http.server 8080
 ```
 
 Then visit `http://localhost:8080`.
+
+## Run with the Python backend
+
+The backend uses only the Python standard library:
+
+```bash
+python backend/server.py --port 8000
+```
+
+Then visit `http://127.0.0.1:8000`.
+
+The backend exposes two routes:
+
+- `GET /real-data.js`: dynamically generates `window.GOALMAP_REAL_DATA` and falls back to the local snapshot if the upstream request fails
+- `GET /api/world-cup/standings`: returns the normalized standings as JSON
 
 ## Deploy to GitHub Pages
 
@@ -53,6 +68,9 @@ The site uses relative asset paths, so it works from both a user site and a proj
 ├── styles.css
 ├── app.js
 ├── real-data.js
+├── backend/
+│   ├── server.py
+│   └── worldcup_provider.py
 ├── README.md
 ├── README.zh-CN.md
 └── LICENSE

@@ -19,7 +19,7 @@
 
 内置积分数据更新于 **2026 年 6 月 25 日 17:22（UTC+8）**。
 
-项目不再依赖实时接口。比赛结果变化后，只需要更新 [`real-data.js`](./real-data.js) 中的数据。
+直接打开静态页面时，项目使用 [`real-data.js`](./real-data.js) 中的快照数据。需要动态数据时，可以启动 Python 后端，由后端从 ESPN 的公开 standings JSON 读取并转换为前端数据格式。
 
 ## 本地运行
 
@@ -32,6 +32,21 @@ python -m http.server 8080
 ```
 
 然后访问 `http://localhost:8080`。
+
+## 使用 Python 后端读取动态数据
+
+后端只使用 Python 标准库，不需要额外安装依赖：
+
+```bash
+python backend/server.py --port 8000
+```
+
+然后访问 `http://127.0.0.1:8000`。
+
+后端提供两个入口：
+
+- `GET /real-data.js`：动态生成前端需要的 `window.GOALMAP_REAL_DATA`，接口失败时自动回落到本地快照
+- `GET /api/world-cup/standings`：返回 JSON 格式的归一化积分数据
 
 ## 部署到 GitHub Pages
 
@@ -53,6 +68,9 @@ python -m http.server 8080
 ├── styles.css
 ├── app.js
 ├── real-data.js
+├── backend/
+│   ├── server.py
+│   └── worldcup_provider.py
 ├── README.md
 ├── README.zh-CN.md
 └── LICENSE
