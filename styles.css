@@ -112,6 +112,7 @@ footer {
 
 .header-reset,
 .language-toggle,
+.data-refresh-button,
 .outline-button {
   border: 1px solid rgba(16, 41, 34, 0.17);
   border-radius: 8px;
@@ -122,6 +123,18 @@ footer {
   transition: 160ms ease;
 }
 .header-reset { padding: 9px 14px; }
+.data-refresh-button {
+  width: 35px;
+  height: 35px;
+  color: var(--green);
+  font-size: 16px;
+  line-height: 1;
+}
+.data-refresh-button:disabled {
+  cursor: wait;
+  opacity: .7;
+}
+.data-refresh-button.refreshing { animation: refreshSpin 900ms linear infinite; }
 .language-toggle {
   min-width: 43px;
   padding: 9px 10px;
@@ -129,7 +142,7 @@ footer {
   color: var(--green);
   background: rgba(255,255,255,.52);
 }
-.header-reset:hover, .language-toggle:hover, .outline-button:hover { color: var(--green); border-color: var(--green); }
+.header-reset:hover, .language-toggle:hover, .data-refresh-button:hover, .outline-button:hover { color: var(--green); border-color: var(--green); }
 .header-actions { display: flex; align-items: center; gap: 11px; }
 .live-data-badge {
   display: inline-flex;
@@ -158,6 +171,7 @@ footer {
 .live-data-badge.fallback { color: #9b7127; }
 .live-data-badge.fallback i { background: #d6a723; }
 @keyframes dataPulse { 50% { opacity: .35; } }
+@keyframes refreshSpin { to { transform: rotate(360deg); } }
 
 .hero { padding: 74px 0 38px; }
 .eyebrow, .section-kicker {
@@ -446,6 +460,22 @@ footer {
   touch-action: none;
 }
 .drag-handle:active { cursor: grabbing; }
+.lock-mark {
+  width: 22px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  color: #8b9691;
+  font-size: 13px;
+  opacity: .7;
+}
+.group-team.locked,
+.third-row.locked {
+  cursor: default;
+}
+.group-team.locked.direct:hover { background: rgba(8, 117, 83, 0.055); }
+.group-team.locked.third:hover { background: rgba(223, 255, 79, 0.13); }
+.third-row.locked.qualified:hover { background: rgba(8, 117, 83, 0.04); }
 .position { color: #9aa49f; font-family: "Manrope", sans-serif; font-size: 9px; text-align: center; }
 .position { font-size: 11px; }
 .team-flag {
@@ -626,6 +656,7 @@ footer {
 
 .bracket-heading { align-items: center; }
 .bracket-actions { display: flex; align-items: center; gap: 18px; }
+.sync-button { white-space: nowrap; }
 .prediction-progress { min-width: 180px; }
 .prediction-progress > span { display: block; margin-bottom: 7px; color: var(--muted); font-size: 9px; }
 .prediction-progress > span { font-size: 11px; }
@@ -693,6 +724,10 @@ footer {
   background: rgba(255,255,255,.92);
   box-shadow: 0 5px 14px rgba(16,41,34,.035);
 }
+.bracket-match.locked {
+  border-color: rgba(8, 117, 83, .26);
+  background: linear-gradient(180deg, rgba(223,255,79,.1), rgba(255,255,255,.95));
+}
 .bracket-match::after {
   content: "";
   position: absolute;
@@ -730,8 +765,12 @@ footer {
   cursor: pointer;
   transition: 140ms ease;
 }
+.bracket-team:disabled {
+  cursor: default;
+}
 .bracket-team:last-child { border-bottom: 0; }
 .bracket-team:hover { background: #f2f7ec; }
+.bracket-team.locked:hover { background: transparent; }
 .bracket-team strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
 .bracket-team .team-flag { width: 29px; height: 20px; font-size: 11px; }
 .pick-mark { color: #9aa49f; font-size: 9px; opacity: 0; }
@@ -741,6 +780,14 @@ footer {
 .bracket-team.picked:last-child { border-radius: 0 0 8px 8px; }
 .bracket-team.picked .team-flag { color: var(--ink); background: var(--lime); border-color: transparent; }
 .bracket-team.picked .pick-mark { color: var(--lime); opacity: 1; font-size: 10px; }
+.bracket-team.locked.picked .pick-mark {
+  color: var(--lime);
+  opacity: 1;
+  font-size: 9px;
+}
+.bracket-team.locked:not(.picked) {
+  opacity: .58;
+}
 .bracket-team.placeholder { color: #a1aaa6; cursor: default; }
 .bracket-team.placeholder:hover { background: transparent; }
 .bracket-team.placeholder .team-flag { color: #a1aaa6; background: #eef0ec; }
@@ -834,6 +881,7 @@ footer {
   .site-header, main, footer { width: min(100% - 28px, 1480px); }
   .site-header { height: 68px; }
   .header-reset, .language-toggle { font-size: 8px; }
+  .data-refresh-button { width: 32px; height: 32px; font-size: 14px; }
   .language-toggle { min-width: 36px; padding-inline: 8px; }
   .live-data-badge { display: none; }
   .hero { padding-top: 48px; }
