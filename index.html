@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=5" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -47,8 +47,7 @@
           <div>
             <h1><em data-i18n="heroTitle">世界杯预测模拟器</em></h1>
             <p data-i18n="heroDescription">
-              小组赛排名已锁定，再从真实淘汰赛结果继续预测。
-              32 强签表会自动生成，之后每一场都由你亲手选择。
+              拖动每组球队决定排名，再排出 8 个最佳小组第三。32 强签表会自动生成，之后每一场都由你亲手选择。
             </p>
           </div>
           <div class="hero-side">
@@ -85,8 +84,8 @@
       <section class="workflow-nav" aria-label="预测进度" data-i18n-aria="predictionProgress">
         <button class="workflow-step active" data-scroll="groups">
           <span>01</span>
-          <div><b data-i18n="stepGroups">排列小组</b><small data-i18n="stepGroupsHint">小组赛已锁定</small></div>
-          <em id="groupStepStatus" data-i18n="adjustAnytime">最终排名</em>
+          <div><b data-i18n="stepGroups">排列小组</b><small data-i18n="stepGroupsHint">拖拽 12 组排名</small></div>
+          <em id="groupStepStatus" data-i18n="adjustAnytime">可随时调整</em>
         </button>
         <button class="workflow-step" data-scroll="thirds">
           <span>02</span>
@@ -104,8 +103,8 @@
         <div class="section-heading">
           <div>
             <span class="section-kicker">STEP 01 · GROUP STAGE</span>
-            <h2 data-i18n="groupsTitle">从当前真实积分榜继续预测</h2>
-            <p data-i18n="groupsDescription">小组赛已经结束，积分、净胜球和最终排名已锁定；淘汰赛继续由你预测。</p>
+            <h2 data-i18n="groupsTitle">拖出你心中的小组排名</h2>
+            <p data-i18n="groupsDescription">积分、净胜球和已赛场次来自当前数据；拖动球队，重新排列你的预测名次。</p>
           </div>
           <div class="heading-actions">
             <span class="autosave"><i></i> <span data-i18n="autosave">自动保存</span></span>
@@ -125,7 +124,7 @@
           <div>
             <span class="section-kicker">STEP 02 · BEST THIRD-PLACED</span>
             <h2 data-i18n="thirdsTitle">再排一次：谁是最好的第三名？</h2>
-            <p data-i18n="thirdsDescription">12 支小组第三名已经按最终积分排序，前 8 队进入 32 强。</p>
+            <p data-i18n="thirdsDescription">拖动 12 支小组第三名球队，排在绿色晋级线以上的 8 队进入 32 强。</p>
           </div>
           <div class="third-counter">
             <strong>8</strong><span data-i18n="thirdsCounter">/ 12 晋级</span>
@@ -144,8 +143,7 @@
         <div class="third-note">
           <span>i</span>
           <p data-i18n="thirdsNote">
-            小组赛已全部结束，第三名晋级/出局状态已确认；第三名进入
-            32 强后的落位按 FIFA 官方组合映射生成。
+            默认顺序依据当前积分、净胜球和进球数排列；你可以继续拖动调整。第三名进入 32 强后的落位按所选组合映射生成。
           </p>
         </div>
       </section>
@@ -162,7 +160,6 @@
               <span><b id="selectedMatches">0</b> <span data-i18n="matchesSelected">/ 31 场已选择</span></span>
               <div><i id="predictionProgressBar"></i></div>
             </div>
-            <button class="outline-button sync-button" id="syncKnockoutBtn" data-i18n="syncKnockout">同步真实淘汰赛</button>
             <button class="outline-button" id="clearBracketBtn" data-i18n="clearBracket">清空淘汰赛</button>
           </div>
         </div>
@@ -171,7 +168,7 @@
           <div class="bracket-topbar">
             <div>
               <span class="pulse-dot"></span>
-              <span data-i18n="clickToAdvance">真实赛果已锁定，未赛场次仍可预测</span>
+              <span data-i18n="clickToAdvance">点击球队即可晋级，所有比赛都由你决定</span>
             </div>
             <div class="bracket-legend">
               <span><i class="picked-swatch"></i><span data-i18n="selected">已选择</span></span>
@@ -247,7 +244,7 @@
       <span>MAKE YOUR CALL</span>
     </footer>
 
-    <script src="./real-data.js"></script>
-    <script src="./app.js"></script>
+    <script src="./real-data.js?v=5"></script>
+    <script src="./app.js?v=5"></script>
   </body>
 </html>

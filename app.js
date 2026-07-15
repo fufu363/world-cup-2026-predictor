@@ -1,9 +1,8 @@
-const STORAGE_KEY = "goalmap-2026-manual-bracket-v4";
+const STORAGE_KEY = "goalmap-2026-manual-bracket-v5";
 const LANGUAGE_KEY = "goalmap-2026-language";
 const REAL_DATA = window.GOALMAP_REAL_DATA;
 const LIVE_DATA_SOURCE = {
   groups: "https://worldcup26.ir/get/groups",
-  games: "https://worldcup26.ir/get/games",
 };
 const LIVE_DATA_TIMEOUT_MS = 12000;
 const GROUP_ORDER = "ABCDEFGHIJKL".split("");
@@ -54,7 +53,7 @@ const TRANSLATIONS = {
     refreshData: "刷新联网数据",
     restart: "重新开始",
     heroTitle: "世界杯预测模拟器",
-    heroDescription: "小组赛最终排名已经锁定，真实淘汰赛结果会自动写入；未完赛的路径继续由你亲手预测。",
+    heroDescription: "拖动每组球队决定排名，再排出 8 个最佳小组第三。32 强签表会自动生成，之后每一场都由你亲手选择。",
     completion: "预测完成度",
     startPrediction: "开始我的预测",
     teamsCount: "支球队",
@@ -65,21 +64,21 @@ const TRANSLATIONS = {
     updatedAt: "当前积分数据更新于",
     officialStandings: "查看 FIFA 官方积分榜 ↗",
     stepGroups: "排列小组",
-    stepGroupsHint: "小组赛已锁定",
-    adjustAnytime: "最终排名",
+    stepGroupsHint: "拖拽 12 组排名",
+    adjustAnytime: "可随时调整",
     stepThirds: "最佳第三",
     stepThirdsHint: "前 8 名自动晋级",
     stepChampion: "选择冠军",
     stepChampionHint: "逐场点击晋级",
-    groupsTitle: "从当前真实积分榜继续预测",
-    groupsDescription: "小组赛已经结束，积分、净胜球和最终排名已锁定；淘汰赛继续由你预测。",
+    groupsTitle: "拖出你心中的小组排名",
+    groupsDescription: "积分、净胜球和已赛场次来自当前数据；拖动球队，重新排列你的预测名次。",
     autosave: "自动保存",
     restoreStandings: "恢复真实排名",
     legendDirect: "直接晋级",
     legendThird: "进入最佳第三比较",
     legendOut: "暂时出局",
     thirdsTitle: "再排一次：谁是最好的第三名？",
-    thirdsDescription: "12 支小组第三名已经按最终积分排序，前 8 队进入 32 强。",
+    thirdsDescription: "拖动 12 支小组第三名球队，排在绿色晋级线以上的 8 队进入 32 强。",
     thirdsCounter: "/ 12 晋级",
     rank: "排名",
     teamLabel: "球队",
@@ -87,13 +86,12 @@ const TRANSLATIONS = {
     status: "状态",
     qualificationLine: "晋级线",
     qualificationHint: "上方 8 队晋级 · 下方 4 队出局",
-    thirdsNote: "小组赛已全部结束，第三名晋级/出局状态已确认；第三名进入 32 强后的落位按 FIFA 官方组合映射生成。",
+    thirdsNote: "默认顺序依据当前积分、净胜球和进球数排列；你可以继续拖动调整。第三名进入 32 强后的落位按所选组合映射生成。",
     bracketTitle: "完整冠军路径",
     bracketDescription: "从 32 强开始点击你看好的球队，它会自动出现在下一轮。",
     matchesSelected: "/ 31 场已选择",
     clearBracket: "清空淘汰赛",
-    syncKnockout: "同步真实淘汰赛",
-    clickToAdvance: "真实赛果已锁定，未赛场次仍可预测",
+    clickToAdvance: "点击球队即可晋级，所有比赛都由你决定",
     selected: "已选择",
     waitingPrevious: "等待上轮结果",
     round32: "32 强",
@@ -119,16 +117,10 @@ const TRANSLATIONS = {
     bestThird: "最佳第三",
     outsideComparison: "比较区外",
     temporarilyOut: "暂时出局",
-    clinchedTopTwo: "已锁定小组前二",
     dragToRank: "拖动调整排名",
     thirdSource: "{group} 组 · {points}分 · {gd}",
     provisionalQualified: "暂列晋级区",
     provisionalOutside: "暂列区外",
-    confirmedThirdQualified: "确认晋级",
-    confirmedThirdOutside: "已出局",
-    groupStageLocked: "小组赛已锁定",
-    realResult: "真实赛果",
-    realResultScore: "真实赛果 · {score}",
     waitingWinner: "等待 M{match} 胜者",
     chooseAdvance: "选择 {team} 晋级",
     choose: "选择",
@@ -140,11 +132,7 @@ const TRANSLATIONS = {
     thirdUpdatedToast: "最佳第三排名已更新，32 强签表已重新生成",
     restoredToast: "已恢复当前真实积分排名",
     resetToast: "新的预测已经准备好",
-    bracketClearedToast: "未完赛预测已清空，真实赛果保留",
-    groupStageLockedToast: "小组赛已经结束，排名已锁定",
-    realResultLockedToast: "这场已经有真实赛果，不能修改",
-    noRealResultsToast: "目前还没有可同步的淘汰赛赛果",
-    realResultsSyncedToast: "已同步 {count} 场真实淘汰赛结果",
+    bracketClearedToast: "淘汰赛选择已清空，小组排名保留",
     liveDataLoadedToast: "已更新到最新联网数据",
     liveDataFailedToast: "联网更新失败，继续使用内置快照",
   },
@@ -164,7 +152,7 @@ const TRANSLATIONS = {
     refreshData: "Refresh online data",
     restart: "Start over",
     heroTitle: "World Cup Predictor",
-    heroDescription: "The final group standings are locked, real knockout results are applied automatically, and the remaining path is still yours to predict.",
+    heroDescription: "Drag teams into your group order, rank the 12 third-placed teams, and choose every winner from the round of 32 to the final.",
     completion: "Prediction complete",
     startPrediction: "Start predicting",
     teamsCount: "teams",
@@ -175,21 +163,21 @@ const TRANSLATIONS = {
     updatedAt: "Standings snapshot updated",
     officialStandings: "View FIFA standings ↗",
     stepGroups: "Rank the groups",
-    stepGroupsHint: "Group stage locked",
-    adjustAnytime: "Final table",
+    stepGroupsHint: "Drag all 12 groups",
+    adjustAnytime: "Adjust anytime",
     stepThirds: "Best third-placed",
     stepThirdsHint: "Top 8 advance",
     stepChampion: "Pick a champion",
     stepChampionHint: "Choose every winner",
-    groupsTitle: "Predict from the current standings",
-    groupsDescription: "The group stage is complete, so the final standings are locked. Continue predicting the knockout stage.",
+    groupsTitle: "Build your group rankings",
+    groupsDescription: "Matches played, goal difference, and points use the current data. Drag teams into your predicted order.",
     autosave: "Autosaved",
     restoreStandings: "Restore standings",
     legendDirect: "Direct qualification",
     legendThird: "Third-place comparison",
     legendOut: "Currently out",
     thirdsTitle: "Which third-placed teams advance?",
-    thirdsDescription: "The 12 third-placed teams are ordered by the final standings. The top eight enter the round of 32.",
+    thirdsDescription: "Drag the 12 third-placed teams into order. The top eight above the qualification line enter the round of 32.",
     thirdsCounter: "/ 12 advance",
     rank: "Rank",
     teamLabel: "Team",
@@ -197,13 +185,12 @@ const TRANSLATIONS = {
     status: "Status",
     qualificationLine: "Qualification line",
     qualificationHint: "Top 8 advance · Bottom 4 go out",
-    thirdsNote: "The group stage is complete. Third-place qualification is confirmed, and round-of-32 slots follow the official FIFA combination mapping.",
+    thirdsNote: "The default order uses the current points, goal difference, and goals scored. You can keep dragging to adjust it; round-of-32 slots follow the selected combination.",
     bracketTitle: "Complete path to the trophy",
     bracketDescription: "Choose a team in each match and it will move automatically into the next round.",
     matchesSelected: "/ 31 matches picked",
     clearBracket: "Clear knockout picks",
-    syncKnockout: "Sync real knockout",
-    clickToAdvance: "Real results are locked. Unplayed matches remain open.",
+    clickToAdvance: "Click a team to advance it. Every match is yours to decide.",
     selected: "Selected",
     waitingPrevious: "Waiting for previous round",
     round32: "Round of 32",
@@ -229,16 +216,10 @@ const TRANSLATIONS = {
     bestThird: "Best third",
     outsideComparison: "Outside top 8",
     temporarilyOut: "Currently out",
-    clinchedTopTwo: "Top two clinched",
     dragToRank: "Drag to change ranking",
     thirdSource: "Group {group} · {points} pts · {gd}",
     provisionalQualified: "Provisional top 8",
     provisionalOutside: "Provisional outside",
-    confirmedThirdQualified: "Qualified",
-    confirmedThirdOutside: "Eliminated",
-    groupStageLocked: "Group stage locked",
-    realResult: "Real result",
-    realResultScore: "Real result · {score}",
     waitingWinner: "Winner of M{match}",
     chooseAdvance: "Advance {team}",
     choose: "Pick",
@@ -250,11 +231,7 @@ const TRANSLATIONS = {
     thirdUpdatedToast: "Third-place order updated. The round of 32 was rebuilt.",
     restoredToast: "Current standings restored",
     resetToast: "A new prediction is ready",
-    bracketClearedToast: "Unplayed knockout picks cleared. Real results were kept.",
-    groupStageLockedToast: "The group stage is complete. Standings are locked.",
-    realResultLockedToast: "This match already has a real result and cannot be changed.",
-    noRealResultsToast: "There are no knockout results to sync yet.",
-    realResultsSyncedToast: "Synced {count} real knockout results.",
+    bracketClearedToast: "Knockout picks cleared. Group rankings were kept.",
     liveDataLoadedToast: "Updated to the latest online data.",
     liveDataFailedToast: "Online update failed. Keeping the bundled snapshot.",
   },
@@ -264,8 +241,6 @@ let liveData = structuredClone(REAL_DATA);
 let INITIAL_GROUPS = structuredClone(liveData.groups);
 let GROUP_IDS = Object.keys(INITIAL_GROUPS);
 let INITIAL_THIRD_ORDER = [...liveData.thirdOrder];
-let GROUP_STAGE_LOCKED = isGroupStageLocked(liveData);
-let REAL_KNOCKOUT_RESULTS = liveData.knockoutResults ?? {};
 let snapshotGroups = structuredClone(INITIAL_GROUPS);
 let snapshotThirdOrder = [...INITIAL_THIRD_ORDER];
 let snapshotStats = structuredClone(liveData.stats);
@@ -855,29 +830,9 @@ function flagSrcForTeam(teamId) {
   return `./assets/flags/${flagCodeForTeam(teamId)}.svg`;
 }
 
-function getRealKnockoutResult(matchNo) {
-  const raw = REAL_KNOCKOUT_RESULTS[matchNo] ?? REAL_KNOCKOUT_RESULTS[String(matchNo)];
-  if (!raw) return null;
-  if (typeof raw === "string") return { winnerId: raw, score: "" };
-  return {
-    winnerId: raw.winner,
-    score: raw.score ?? "",
-  };
-}
-
-function realKnockoutResultCount() {
-  return Object.keys(REAL_KNOCKOUT_RESULTS).length;
-}
-
 function parseApiNumber(value) {
   const number = Number(value);
   return Number.isFinite(number) ? number : 0;
-}
-
-function parseNullableApiNumber(value) {
-  if (value === null || value === undefined || value === "" || value === "null") return null;
-  const number = Number(value);
-  return Number.isFinite(number) ? number : null;
 }
 
 function apiTeamId(value) {
@@ -886,20 +841,6 @@ function apiTeamId(value) {
     throw new Error(`Unknown live data team id: ${value}`);
   }
   return teamId;
-}
-
-function isApiFinished(value) {
-  return String(value).toLowerCase() === "true";
-}
-
-function isGroupStageLocked(data = liveData) {
-  const groups = data.groups ?? {};
-  const stats = data.stats ?? {};
-  const groupIds = Object.keys(groups);
-  return Boolean(data.groupStageLocked) ||
-    groupIds.every((groupId) =>
-      groups[groupId].every((teamId) => (stats?.[teamId]?.[0] ?? 0) >= 3),
-    );
 }
 
 async function fetchJsonWithTimeout(url) {
@@ -974,66 +915,11 @@ function normalizeRemoteGroups(payload) {
   return { groups, stats, thirdOrder: buildThirdOrder(groups, stats) };
 }
 
-function formatRemoteScore(game) {
-  const homeScore = parseApiNumber(game.home_score);
-  const awayScore = parseApiNumber(game.away_score);
-  const homePenalty = parseNullableApiNumber(game.home_penalty_score);
-  const awayPenalty = parseNullableApiNumber(game.away_penalty_score);
-  const baseScore = `${homeScore}-${awayScore}`;
-
-  if (homePenalty !== null && awayPenalty !== null) {
-    return `${baseScore} (${homePenalty}-${awayPenalty} pens)`;
-  }
-
-  const elapsed = String(game.time_elapsed ?? "").toLowerCase();
-  return elapsed.includes("aet") ? `${baseScore} (AET)` : baseScore;
-}
-
-function normalizeRemoteKnockoutResults(payload) {
-  const games = Array.isArray(payload?.games) ? payload.games : [];
-  return games.reduce((results, game) => {
-    const matchNo = parseApiNumber(game.id);
-    if (matchNo < 73 || matchNo > 104 || matchNo === 103 || !isApiFinished(game.finished)) {
-      return results;
-    }
-
-    const homeTeamId = apiTeamId(game.home_team_id);
-    const awayTeamId = apiTeamId(game.away_team_id);
-    const homeScore = parseApiNumber(game.home_score);
-    const awayScore = parseApiNumber(game.away_score);
-    const homePenalty = parseNullableApiNumber(game.home_penalty_score);
-    const awayPenalty = parseNullableApiNumber(game.away_penalty_score);
-    let winner = null;
-
-    if (homeScore > awayScore) winner = homeTeamId;
-    if (awayScore > homeScore) winner = awayTeamId;
-    if (!winner && homePenalty !== null && awayPenalty !== null) {
-      if (homePenalty > awayPenalty) winner = homeTeamId;
-      if (awayPenalty > homePenalty) winner = awayTeamId;
-    }
-
-    if (winner) {
-      results[matchNo] = {
-        winner,
-        score: formatRemoteScore(game),
-      };
-    }
-    return results;
-  }, {});
-}
-
-function normalizeRemoteData(groupsPayload, gamesPayload) {
+function normalizeRemoteData(groupsPayload) {
   const { groups, stats, thirdOrder } = normalizeRemoteGroups(groupsPayload);
-  const knockoutResults = normalizeRemoteKnockoutResults(gamesPayload);
   return {
     updatedAt: new Date().toISOString(),
     source: LIVE_DATA_SOURCE.groups,
-    groupStageLocked: GROUP_ORDER.every((groupId) =>
-      groups[groupId].every((teamId) => (stats[teamId]?.[0] ?? 0) >= 3),
-    ),
-    knockoutUpdatedAt: new Date().toISOString(),
-    knockoutSource: LIVE_DATA_SOURCE.games,
-    knockoutResults,
     groups,
     thirdOrder,
     stats,
@@ -1045,8 +931,6 @@ function applyDataSnapshot(nextData) {
   INITIAL_GROUPS = structuredClone(liveData.groups);
   GROUP_IDS = Object.keys(INITIAL_GROUPS);
   INITIAL_THIRD_ORDER = [...liveData.thirdOrder];
-  GROUP_STAGE_LOCKED = isGroupStageLocked(liveData);
-  REAL_KNOCKOUT_RESULTS = liveData.knockoutResults ?? {};
   snapshotGroups = structuredClone(INITIAL_GROUPS);
   snapshotThirdOrder = [...INITIAL_THIRD_ORDER];
   snapshotStats = structuredClone(liveData.stats);
@@ -1081,11 +965,8 @@ async function refreshLiveData({ silent = false } = {}) {
   refreshButton.classList.add("refreshing");
 
   try {
-    const [groupsPayload, gamesPayload] = await Promise.all([
-      fetchJsonWithTimeout(LIVE_DATA_SOURCE.groups),
-      fetchJsonWithTimeout(LIVE_DATA_SOURCE.games),
-    ]);
-    applyDataSnapshot(normalizeRemoteData(groupsPayload, gamesPayload));
+    const groupsPayload = await fetchJsonWithTimeout(LIVE_DATA_SOURCE.groups);
+    applyDataSnapshot(normalizeRemoteData(groupsPayload));
     setDataStatus("live");
     if (!silent) showToast(t("liveDataLoadedToast"));
   } catch (error) {
@@ -1147,11 +1028,11 @@ function cleanState(raw) {
     GROUP_IDS.every((id) => raw.thirdOrder.includes(id));
 
   return {
-    groups: !GROUP_STAGE_LOCKED && raw?.manualGroups && validGroups ? raw.groups : structuredClone(INITIAL_GROUPS),
-    thirdOrder: !GROUP_STAGE_LOCKED && raw?.manualThirds && validThirdOrder ? raw.thirdOrder : [...INITIAL_THIRD_ORDER],
+    groups: raw?.manualGroups && validGroups ? raw.groups : structuredClone(INITIAL_GROUPS),
+    thirdOrder: raw?.manualThirds && validThirdOrder ? raw.thirdOrder : [...INITIAL_THIRD_ORDER],
     selections: raw?.selections && typeof raw.selections === "object" ? raw.selections : {},
-    manualGroups: !GROUP_STAGE_LOCKED && Boolean(raw?.manualGroups),
-    manualThirds: !GROUP_STAGE_LOCKED && Boolean(raw?.manualThirds),
+    manualGroups: Boolean(raw?.manualGroups) && Boolean(validGroups),
+    manualThirds: Boolean(raw?.manualThirds) && Boolean(validThirdOrder),
   };
 }
 
@@ -1180,12 +1061,6 @@ function seedTeam(seed) {
 
 function selectedThirdGroups() {
   return state.thirdOrder.slice(0, 8);
-}
-
-function groupStageComplete() {
-  return GROUP_IDS.every((groupId) =>
-    state.groups[groupId].every((teamId) => getTeamStats(teamId).gp >= 3),
-  );
 }
 
 function allocateThirdSlots() {
@@ -1222,9 +1097,7 @@ function invalidateBracket(message) {
 
 function buildMatch(no, teamA, teamB, sourceA = null, sourceB = null) {
   const validIds = [teamA?.id, teamB?.id].filter(Boolean);
-  const realResult = getRealKnockoutResult(no);
-  const realWinnerValid = realResult?.winnerId && validIds.includes(realResult.winnerId);
-  let winnerId = realWinnerValid ? realResult.winnerId : state.selections[no];
+  let winnerId = state.selections[no];
 
   if (!validIds.includes(winnerId)) {
     delete state.selections[no];
@@ -1238,8 +1111,6 @@ function buildMatch(no, teamA, teamB, sourceA = null, sourceB = null) {
     sourceA,
     sourceB,
     winnerId,
-    locked: Boolean(realWinnerValid),
-    realScore: realWinnerValid ? realResult.score : "",
   };
 }
 
@@ -1277,24 +1148,22 @@ function teamRowMarkup(groupId, teamId, position) {
   const current = team(teamId);
   const status = getGroupStatus(groupId, position);
   const stats = getTeamStats(teamId);
-  const confirmedDirect = position < 2 && stats.advanced;
-  const statusLabel = confirmedDirect ? t("clinchedTopTwo") : status.label;
-  const dragAttributes = GROUP_STAGE_LOCKED
-    ? ""
-    : `draggable="true" data-drag-type="group" data-group="${groupId}" data-team="${teamId}"`;
   return `
     <div
-      class="group-team ${status.className} ${GROUP_STAGE_LOCKED ? "locked" : ""}"
-      ${dragAttributes}
+      class="group-team ${status.className}"
+      draggable="true"
+      data-drag-type="group"
+      data-group="${groupId}"
+      data-team="${teamId}"
     >
-      <span class="${GROUP_STAGE_LOCKED ? "lock-mark" : "drag-handle"}" aria-hidden="true" title="${GROUP_STAGE_LOCKED ? t("groupStageLocked") : t("dragToRank")}">${GROUP_STAGE_LOCKED ? "🔒" : "⠿"}</span>
+      <span class="drag-handle" aria-hidden="true" title="${t("dragToRank")}">⠿</span>
       <span class="position">${position + 1}</span>
       ${flagMarkup(teamId)}
       <strong>${current.name}</strong>
       <span class="team-record">
         <b>${stats.gp}</b><b>${formatGoalDifference(stats.gd)}</b><b>${stats.pts}</b>
       </span>
-      <span class="team-status ${confirmedDirect ? "confirmed" : ""}">${statusLabel}</span>
+      <span class="team-status">${status.label}</span>
     </div>
   `;
 }
@@ -1321,19 +1190,15 @@ function thirdRowMarkup(groupId, index) {
   const current = team(teamId);
   const stats = getTeamStats(teamId);
   const qualified = index < 8;
-  const complete = groupStageComplete();
-  const statusLabel = complete
-    ? (qualified ? t("confirmedThirdQualified") : t("confirmedThirdOutside"))
-    : (qualified ? t("provisionalQualified") : t("provisionalOutside"));
-  const dragAttributes = GROUP_STAGE_LOCKED
-    ? ""
-    : `draggable="true" data-drag-type="third" data-group="${groupId}"`;
+  const statusLabel = qualified ? t("provisionalQualified") : t("provisionalOutside");
   return `
     <div
-      class="third-row ${qualified ? "qualified" : "eliminated"} ${GROUP_STAGE_LOCKED ? "locked" : ""}"
-      ${dragAttributes}
+      class="third-row ${qualified ? "qualified" : "eliminated"}"
+      draggable="true"
+      data-drag-type="third"
+      data-group="${groupId}"
     >
-      <span class="${GROUP_STAGE_LOCKED ? "lock-mark" : "drag-handle"}" aria-hidden="true" title="${GROUP_STAGE_LOCKED ? t("groupStageLocked") : t("dragToRank")}">${GROUP_STAGE_LOCKED ? "🔒" : "⠿"}</span>
+      <span class="drag-handle" aria-hidden="true" title="${t("dragToRank")}">⠿</span>
       <span class="third-position">${String(index + 1).padStart(2, "0")}</span>
       <div class="third-team">${flagMarkup(teamId)}<strong>${current.name}</strong></div>
       <span class="source-badge">${t("thirdSource", {
@@ -1367,23 +1232,22 @@ function matchTeamMarkup(currentTeam, match, slot) {
   const picked = match.winnerId === currentTeam.id;
   return `
     <button
-      class="bracket-team ${picked ? "picked" : ""} ${match.locked ? "locked" : ""}"
-      ${match.locked ? "disabled" : `data-match="${match.no}" data-pick="${currentTeam.id}"`}
+      class="bracket-team ${picked ? "picked" : ""}"
+      data-match="${match.no}"
+      data-pick="${currentTeam.id}"
       aria-label="${t("chooseAdvance", { team: currentTeam.name })}"
     >
       ${flagMarkup(currentTeam.id)}
       <strong>${currentTeam.name}</strong>
-      <span class="pick-mark">${picked ? (match.locked ? t("realResult") : "✓") : t("choose")}</span>
+      <span class="pick-mark">${picked ? "✓" : t("choose")}</span>
     </button>
   `;
 }
 
 function matchMarkup(match) {
-  const sourceLabel = match.locked
-    ? t("realResultScore", { score: match.realScore || "FT" })
-    : (match.sourceA ? `M${match.sourceA} vs M${match.sourceB}` : t("round32"));
+  const sourceLabel = match.sourceA ? `M${match.sourceA} vs M${match.sourceB}` : t("round32");
   return `
-    <article class="bracket-match ${match.winnerId ? "decided" : ""} ${match.locked ? "locked" : ""}">
+    <article class="bracket-match ${match.winnerId ? "decided" : ""}">
       <div class="match-meta">
         <span>M${match.no}</span>
         <small>${sourceLabel}</small>
@@ -1408,8 +1272,6 @@ function renderBracket() {
   document.querySelectorAll(".bracket-team[data-pick]").forEach((button) => {
     button.addEventListener("click", handleMatchPick);
   });
-
-  el("syncKnockoutBtn").disabled = realKnockoutResultCount() === 0;
 
   renderChampion();
   updateProgress();
@@ -1443,10 +1305,6 @@ function findGroupForTeam(teamId) {
 function handleMatchPick(event) {
   const matchNo = Number(event.currentTarget.dataset.match);
   const teamId = event.currentTarget.dataset.pick;
-  if (bracket[matchNo]?.locked) {
-    showToast(t("realResultLockedToast"));
-    return;
-  }
   state.selections[matchNo] = state.selections[matchNo] === teamId ? null : teamId;
   if (!state.selections[matchNo]) delete state.selections[matchNo];
   rebuildBracket();
@@ -1512,10 +1370,6 @@ function handleDrop(event) {
 }
 
 function applyDraggedOrder(dragInfo, target) {
-  if (GROUP_STAGE_LOCKED) {
-    showToast(t("groupStageLockedToast"));
-    return;
-  }
   if (dragInfo.type === "group") {
     if (target.dataset.group !== dragInfo.groupId) return;
     const order = state.groups[dragInfo.groupId];
@@ -1647,24 +1501,6 @@ function clearBracket() {
   showToast(t("bracketClearedToast"));
 }
 
-function syncKnockoutResults() {
-  const entries = Object.entries(REAL_KNOCKOUT_RESULTS);
-  if (!entries.length) {
-    showToast(t("noRealResultsToast"));
-    return;
-  }
-
-  entries.forEach(([matchNo, result]) => {
-    const winnerId = typeof result === "string" ? result : result.winner;
-    if (winnerId) state.selections[matchNo] = winnerId;
-  });
-
-  rebuildBracket();
-  renderBracket();
-  saveState();
-  showToast(t("realResultsSyncedToast", { count: entries.length }));
-}
-
 function renderAll() {
   rebuildBracket();
   renderGroups();
@@ -1696,7 +1532,6 @@ document.querySelectorAll("[data-scroll]").forEach((button) => {
 el("resetGroupsBtn").addEventListener("click", resetGroups);
 el("resetAllBtn").addEventListener("click", resetAll);
 el("clearBracketBtn").addEventListener("click", clearBracket);
-el("syncKnockoutBtn").addEventListener("click", syncKnockoutResults);
 el("refreshDataBtn").addEventListener("click", () => refreshLiveData());
 el("languageToggle").addEventListener("click", () => {
   setLanguage(currentLanguage === "zh" ? "en" : "zh");

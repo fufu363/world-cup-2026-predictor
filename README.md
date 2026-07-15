@@ -17,9 +17,9 @@ A zero-dependency, bilingual World Cup bracket predictor. Rank every group by dr
 
 ## Live data snapshot
 
-The included standings snapshot was updated on **June 25, 2026 at 17:22 (UTC+8)**.
+The included standings snapshot was updated on **July 3, 2026 at 13:00 (UTC+8)**.
 
-The app intentionally uses a bundled snapshot instead of a live API. Update [`real-data.js`](./real-data.js) when new results are available.
+On startup, the app attempts to refresh the group standings online and falls back to the bundled [`real-data.js`](./real-data.js) snapshot when the service is unavailable. Knockout results are never applied automatically; users choose all 31 matches.
 
 ## Run locally
 
